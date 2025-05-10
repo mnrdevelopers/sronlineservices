@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SR Online Services | Pro Dashboard</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Lottie Player -->
+ <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+  
+  <!-- Custom CSS -->
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3f37c9;
+      --light: #f8f9fa;
+      --dark: #212529;
+    }
+    
+    [data-bs-theme="dark"] {
+      --primary: #6c8eff;
+      --secondary: #5e72e4;
+      --light: #1a1a1a;
+      --dark: #f8f9fa;
+    }
+    
+    body {
+      background-color: var(--light);
+      color: var(--dark);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      transition: all 0.3s;
+    }
+    
+    .navbar-brand {
+      font-weight: 700;
+    }
+    
+    .service-card {
+      transition: transform 0.3s, box-shadow 0.3s;
+      border-radius: 10px;
+      overflow: hidden;
+      border: none;
+      background-color: var(--bs-card-bg);
+    }
+    
+    .service-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .service-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+    
+    .search-box {
+      border-radius: 50px;
+      padding: 12px 20px;
+      border: 2px solid var(--bs-border-color);
+      background-color: var(--bs-body-bg);
+      color: var(--bs-body-color);
+    }
+    
+    .search-box:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
+    }
+    
+    .category-badge {
+      background: rgba(67, 97, 238, 0.1);
+      color: var(--primary);
+      font-weight: 500;
+    }
+    
+    .shortcut-key {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--primary);
+      color: white;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: bold;
+    }
+    
+    .recent-service {
+      border-left: 3px solid var(--primary);
+    }
+    
+    #keyboardShortcutHelp {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <i class="fas fa-rocket me-2"></i>SR Online Services
+      </a>
+      <div class="ms-auto d-flex align-items-center gap-3">
+        <button class="btn btn-sm btn-light" id="themeToggle">
+          <i class="fas fa-moon"></i>
+        </button>
+        <span class="badge bg-light text-primary rounded-pill">Pro Mode</span>
+      </div>
+    </div>
+  </nav>
+
+<!-- Hero Section -->
+<section class="py-5">
+  <div class="container text-center">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <!-- Updated Lottie Animation -->
+        <dotlottie-player 
+          src="https://lottie.host/0cdf02ad-785e-45ef-aef8-6d0a16a218fa/dva2BjmgRN.lottie" 
+          background="transparent" 
+          speed="1" 
+          style="width: 300px; height: 300px; margin: 0 auto;" 
+          loop 
+          autoplay>
+        </dotlottie-player>
+        
+        <h1 class="display-5 fw-bold mb-3">Quick Access Dashboard</h1>
+        <p class="lead">All your service links in one place</p>  
+    </div>
+
+          <!-- Quick Stats -->
+          <div class="row justify-content-center mt-4 g-3">
+            <div class="col-md-3">
+              <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                  <h5 class="card-title"><i class="fas fa-link text-primary me-2"></i> <span id="totalServices">0</span></h5>
+                  <p class="card-text text-muted small">Total Services</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                  <h5 class="card-title"><i class="fas fa-history text-primary me-2"></i> <span id="todayUsage">0</span></h5>
+                  <p class="card-text text-muted small">Today's Usage</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                  <h5 class="card-title"><i class="fas fa-star text-primary me-2"></i> <span id="favoritesCount">0</span></h5>
+                  <p class="card-text text-muted small">Favorites</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Search Box -->
+          <div class="mt-4 mb-3">
+            <div class="input-group input-group-lg">
+              <span class="input-group-text bg-transparent border-end-0">
+                <i class="fas fa-search text-muted"></i>
+              </span>
+              <input 
+                type="text" 
+                class="form-control search-box border-start-0" 
+                id="searchInput" 
+                placeholder="Search or press shortcut key (A for Aadhaar, P for PAN)...">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="row">
+      <!-- Recent Services -->
+      <div class="col-md-4 col-lg-3">
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white">
+            <i class="fas fa-clock me-2"></i> Recently Used
+          </div>
+          <div class="card-body p-0">
+            <ul class="list-group list-group-flush" id="recentServices">
+              <li class="list-group-item text-center py-4 text-muted">
+                No recent services
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- Favorites -->
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white">
+            <i class="fas fa-star me-2"></i> Favorites
+          </div>
+          <div class="card-body p-0">
+            <ul class="list-group list-group-flush" id="favoritesList">
+              <li class="list-group-item text-center py-4 text-muted">
+                No favorites yet
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <!-- All Services -->
+      <div class="col-md-8 col-lg-9">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h4 class="mb-0"><i class="fas fa-th-large me-2 text-primary"></i> All Services</h4>
+          <div>
+            <button class="btn btn-sm btn-outline-primary me-2" id="exportBtn">
+              <i class="fas fa-file-export me-1"></i> Export
+            </button>
+            <button class="btn btn-sm btn-outline-primary" id="refreshBtn">
+              <i class="fas fa-sync-alt me-1"></i> Refresh
+            </button>
+          </div>
+        </div>
+        
+        <div class="row" id="servicesList">
+          <!-- Services will load here -->
+          <div class="col-12 text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Keyboard Shortcut Help -->
+  <button class="btn btn-primary btn-sm shadow" id="keyboardShortcutHelp" 
+          data-bs-toggle="modal" data-bs-target="#shortcutModal">
+    <i class="fas fa-keyboard me-1"></i> Shortcuts
+  </button>
+
+  <!-- Shortcut Help Modal -->
+  <div class="modal fade" id="shortcutModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="fas fa-keyboard me-2"></i> Keyboard Shortcuts</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="table-responsive">
+            <table class="table">
+              <tr>
+                <th>Shortcut</th>
+                <th>Action</th>
+              </tr>
+              <tr>
+                <td><kbd>A</kbd></td>
+                <td>Jump to Aadhaar services</td>
+              </tr>
+              <tr>
+                <td><kbd>P</kbd></td>
+                <td>Jump to PAN services</td>
+              </tr>
+              <tr>
+                <td><kbd>/</kbd></td>
+                <td>Focus search box</td>
+              </tr>
+              <tr>
+                <td><kbd>D</kbd></td>
+                <td>Toggle dark mode</td>
+              </tr>
+              <tr>
+                <td><kbd>R</kbd></td>
+                <td>Refresh services</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Custom JS -->
+  <script>
+    // Configuration
+    const API_URL = "https://script.google.com/macros/s/AKfycbyWu7NvnT2A-LJYNbj3YK3IT0oA-IG1iREIZKrPgL0batAJyTHrE3X0kKih3PRXYzApOg/exec";
+    const STORAGE_KEY = "srOnlineServicesData";
+    
+    // State management
+    let allServices = [];
+    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    let recentServices = JSON.parse(localStorage.getItem('recentServices')) || [];
+    let usageStats = JSON.parse(localStorage.getItem('usageStats')) || {
+      totalUses: 0,
+      todayUses: 0,
+      lastUsed: null
+    };
+    
+    // DOM Elements
+    const elements = {
+      servicesList: document.getElementById('servicesList'),
+      recentServices: document.getElementById('recentServices'),
+      favoritesList: document.getElementById('favoritesList'),
+      searchInput: document.getElementById('searchInput'),
+      refreshBtn: document.getElementById('refreshBtn'),
+      exportBtn: document.getElementById('exportBtn'),
+      themeToggle: document.getElementById('themeToggle'),
+      totalServices: document.getElementById('totalServices'),
+      todayUsage: document.getElementById('todayUsage'),
+      favoritesCount: document.getElementById('favoritesCount')
+    };
+    
+    // Icons mapping
+    const serviceIcons = {
+      "aadhaar": "id-card",
+      "pan": "credit-card",
+      "passport": "passport",
+      "ration": "receipt",
+      "banking": "university",
+      "education": "graduation-cap",
+      "government": "landmark",
+      "default": "link"
+    };
+    
+    // Initialize the app
+    function init() {
+      loadServices();
+      setupEventListeners();
+      updateStats();
+      renderRecentServices();
+      renderFavorites();
+      checkDayChange();
+    }
+    
+    // Load services from Google Sheets
+    async function loadServices() {
+      try {
+        showLoading();
+        
+        const response = await fetch(API_URL);
+        allServices = await response.json();
+        
+        displayServices(allServices);
+        updateStats();
+        
+      } catch (error) {
+        showError("Failed to load services. Please try again later.");
+        console.error(error);
+      }
+    }
+    
+    // Display services in cards
+    function displayServices(services) {
+      if (!services || services.length === 0) {
+        elements.servicesList.innerHTML = `
+          <div class="col-12">
+            <div class="alert alert-warning">
+              <i class="fas fa-search me-2"></i>
+              No services found. Try a different search.
+            </div>
+          </div>
+        `;
+        return;
+      }
+      
+      // Group by category
+      const categories = {};
+      services.forEach(service => {
+        if (!categories[service.category]) categories[service.category] = [];
+        categories[service.category].push(service);
+      });
+      
+      let html = '';
+      
+      // Loop through categories
+      for (const [category, items] of Object.entries(categories)) {
+        html += `
+          <div class="col-12 mt-4 mb-2">
+            <h5 class="fw-bold">
+              <i class="fas fa-folder-open text-primary me-2"></i>
+              ${category}
+            </h5>
+            <hr>
+          </div>
+        `;
+        
+        // Add services for this category
+        items.forEach(service => {
+          const icon = getServiceIcon(service.name);
+          const isFavorite = favorites.some(fav => fav.url === service.url);
+          const shortcut = service.shortcut ? service.shortcut.toUpperCase() : service.name.charAt(0).toUpperCase();
+          
+          html += `
+            <div class="col-md-6 col-lg-4 col-xl-3 mb-4">
+              <div class="service-card card h-100 position-relative">
+                <div class="shortcut-key" title="Press ${shortcut}">${shortcut}</div>
+                <div class="card-body text-center">
+                  <i class="fas fa-${icon} service-icon"></i>
+                  <h5 class="card-title">${service.name}</h5>
+                  <span class="badge category-badge mb-3">${service.category}</span>
+                  <div class="d-flex justify-content-center gap-2">
+                    <a 
+                      href="${service.url}" 
+                      target="_blank" 
+                      class="btn btn-primary btn-sm"
+                      data-service='${JSON.stringify(service)}'
+                      onclick="trackUsage(event)"
+                    >
+                      Open <i class="fas fa-external-link-alt ms-1"></i>
+                    </a>
+                    <button 
+                      class="btn btn-sm ${isFavorite ? 'btn-warning' : 'btn-outline-secondary'}"
+                      onclick="toggleFavorite(event, '${service.url}')"
+                      title="${isFavorite ? 'Remove from favorites' : 'Add to favorites'}"
+                    >
+                      <i class="fas fa-star"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+      }
+      
+      elements.servicesList.innerHTML = html;
+    }
+    
+    // Track service usage
+    function trackUsage(event) {
+      event.preventDefault();
+      const service = JSON.parse(event.target.getAttribute('data-service'));
+      
+      // Update usage stats
+      const today = new Date().toDateString();
+      if (usageStats.lastUsed !== today) {
+        usageStats.todayUses = 0;
+        usageStats.lastUsed = today;
+      }
+      usageStats.todayUses++;
+      usageStats.totalUses++;
+      
+      // Add to recent services
+      recentServices = recentServices.filter(s => s.url !== service.url);
+      recentServices.unshift(service);
+      if (recentServices.length > 5) recentServices.pop();
+      
+      // Save to localStorage
+      localStorage.setItem('usageStats', JSON.stringify(usageStats));
+      localStorage.setItem('recentServices', JSON.stringify(recentServices));
+      
+      // Update UI
+      updateStats();
+      renderRecentServices();
+      
+      // Open the link
+      window.open(service.url, '_blank');
+    }
+    
+    // Toggle favorite status
+    function toggleFavorite(event, serviceUrl) {
+      event.stopPropagation();
+      
+      const service = allServices.find(s => s.url === serviceUrl);
+      if (!service) return;
+      
+      const index = favorites.findIndex(fav => fav.url === serviceUrl);
+      
+      if (index === -1) {
+        favorites.push(service);
+      } else {
+        favorites.splice(index, 1);
+      }
+      
+      localStorage.setItem('favorites', JSON.stringify(favorites));
+      renderFavorites();
+      updateStats();
+      loadServices(); // Refresh to update favorite icons
+    }
+    
+    // Render recent services
+    function renderRecentServices() {
+      if (recentServices.length === 0) {
+        elements.recentServices.innerHTML = `
+          <li class="list-group-item text-center py-4 text-muted">
+            No recent services
+          </li>
+        `;
+        return;
+      }
+      
+      let html = '';
+      recentServices.forEach(service => {
+        const icon = getServiceIcon(service.name);
+        html += `
+          <li class="list-group-item recent-service">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <i class="fas fa-${icon} text-primary me-2"></i>
+                <a href="${service.url}" target="_blank" class="text-decoration-none">${service.name}</a>
+              </div>
+              <small class="text-muted">Just now</small>
+            </div>
+          </li>
+        `;
+      });
+      
+      elements.recentServices.innerHTML = html;
+    }
+    
+    // Render favorites
+    function renderFavorites() {
+      if (favorites.length === 0) {
+        elements.favoritesList.innerHTML = `
+          <li class="list-group-item text-center py-4 text-muted">
+            No favorites yet
+          </li>
+        `;
+        return;
+      }
+      
+      let html = '';
+      favorites.forEach(service => {
+        const icon = getServiceIcon(service.name);
+        html += `
+          <li class="list-group-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <i class="fas fa-${icon} text-primary me-2"></i>
+                <a href="${service.url}" target="_blank" class="text-decoration-none">${service.name}</a>
+              </div>
+              <button 
+                class="btn btn-sm btn-outline-danger"
+                onclick="toggleFavorite(event, '${service.url}')"
+                title="Remove from favorites"
+              >
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </li>
+        `;
+      });
+      
+      elements.favoritesList.innerHTML = html;
+    }
+    
+    // Update statistics
+    function updateStats() {
+      elements.totalServices.textContent = allServices.length;
+      elements.todayUsage.textContent = usageStats.todayUses;
+      elements.favoritesCount.textContent = favorites.length;
+    }
+    
+    // Check if day changed for usage stats
+    function checkDayChange() {
+      const today = new Date().toDateString();
+      if (usageStats.lastUsed !== today) {
+        usageStats.todayUses = 0;
+        usageStats.lastUsed = today;
+        localStorage.setItem('usageStats', JSON.stringify(usageStats));
+        updateStats();
+      }
+    }
+    
+    // Export settings
+    function exportSettings() {
+      const data = {
+        favorites,
+        recentServices,
+        usageStats,
+        lastUpdated: new Date().toISOString()
+      };
+      
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `sr-online-services-backup-${new Date().toISOString().slice(0,10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+    
+    // Get appropriate icon for service
+    function getServiceIcon(serviceName) {
+      const name = serviceName.toLowerCase();
+      for (const [key, icon] of Object.entries(serviceIcons)) {
+        if (name.includes(key)) return icon;
+      }
+      return serviceIcons.default;
+    }
+    
+    // Show loading state
+    function showLoading() {
+      elements.servicesList.innerHTML = `
+        <div class="col-12 text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      `;
+    }
+    
+    // Show error message
+    function showError(message) {
+      elements.servicesList.innerHTML = `
+        <div class="col-12">
+          <div class="alert alert-danger">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            ${message}
+          </div>
+        </div>
+      `;
+    }
+    
+    // Setup keyboard shortcuts
+    function setupKeyboardShortcuts() {
+      document.addEventListener('keydown', (e) => {
+        // Ignore if typing in input
+        if (e.target.tagName === 'INPUT') return;
+        
+        switch (e.key.toLowerCase()) {
+          case '/':
+            e.preventDefault();
+            elements.searchInput.focus();
+            break;
+            
+          case 'd':
+            toggleTheme();
+            break;
+            
+          case 'r':
+            loadServices();
+            break;
+            
+          default:
+            // Jump to service by first letter
+            if (e.key.length === 1 && /[a-z]/i.test(e.key)) {
+              const firstMatch = allServices.find(service => 
+                service.shortcut?.toLowerCase() === e.key.toLowerCase() || 
+                service.name.toLowerCase().startsWith(e.key.toLowerCase())
+              );
+              
+              if (firstMatch) {
+                const element = document.querySelector(`[data-service*="${firstMatch.url}"]`);
+                if (element) {
+                  element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  element.classList.add('animate__animated', 'animate__pulse');
+                  setTimeout(() => {
+                    element.classList.remove('animate__animated', 'animate__pulse');
+                  }, 1000);
+                }
+              }
+            }
+        }
+      });
+    }
+    
+    // Toggle dark/light theme
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-bs-theme', newTheme);
+      elements.themeToggle.innerHTML = newTheme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+      localStorage.setItem('theme', newTheme);
+    }
+    
+    // Setup event listeners
+    function setupEventListeners() {
+      // Search functionality
+      elements.searchInput.addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        const filtered = allServices.filter(service => 
+          service.name.toLowerCase().includes(term) || 
+          service.category.toLowerCase().includes(term)
+        );
+        displayServices(filtered);
+      });
+      
+      // Refresh button
+      elements.refreshBtn.addEventListener('click', loadServices);
+      
+      // Export button
+      elements.exportBtn.addEventListener('click', exportSettings);
+      
+      // Theme toggle
+      elements.themeToggle.addEventListener('click', toggleTheme);
+      
+      // Keyboard shortcuts
+      setupKeyboardShortcuts();
+    }
+    
+    // Initialize theme from localStorage
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-bs-theme', savedTheme);
+    elements.themeToggle.innerHTML = savedTheme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+    
+    // Global functions
+    window.trackUsage = trackUsage;
+    window.toggleFavorite = toggleFavorite;
+    
+    // Start the app
+    init();
+  </script>
+</body>
+</html>
