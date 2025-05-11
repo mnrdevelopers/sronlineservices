@@ -397,21 +397,28 @@
     }
     
     // Load services from Google Sheets
-    async function loadServices() {
-      try {
-        showLoading();
-        
-        const response = await fetch(API_URL);
-        allServices = await response.json();
-        
-        displayServices(allServices);
-        updateStats();
-        
-      } catch (error) {
-        showError("Failed to load services. Please try again later.");
-        console.error(error);
-      }
-    }
+   async function loadServices() {
+  try {
+    showLoading();
+    
+    // Use JSONP approach for GET requests
+    const script = document.createElement('script');
+    script.src = `${API_URL}?callback=handleServicesResponse`;
+    document.body.appendChild(script);
+    
+  } catch (error) {
+    showError("Failed to load services. Please try again later.");
+    console.error(error);
+  }
+}
+
+// Add this global function
+window.handleServicesResponse = function(data) {
+  allServices = data;
+  displayServices(allServices);
+  updateStats();
+  document.body.removeChild(document.querySelector('script[src*="callback=handleServicesResponse"]'));
+};
     
     // Display services in cards
     function displayServices(services) {
