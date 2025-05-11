@@ -393,25 +393,28 @@
     }
     
     // Load services from Google Sheets
-    async function loadServices() {
-      try {
-        showLoading();
-        
-        const response = await fetch(API_URL);
-        allServices = await response.json();
-        
-        // Load any locally added services
-        const localServices = JSON.parse(localStorage.getItem('localServices')) || [];
-        allServices = [...allServices, ...localServices];
-        
-        displayServices(allServices);
-        updateStats();
-        
-      } catch (error) {
-        showError("Failed to load services. Please try again later.");
-        console.error(error);
-      }
-    }
+   async function loadServices() {
+  try {
+    showLoading();
+
+    const response = await fetch(API_URL);
+    const result = await response.json();
+
+    // 🔍 Make sure you're getting just the array
+    allServices = result.data || [];  // ✅ Updated: extract only the 'data' array
+
+    const localServices = JSON.parse(localStorage.getItem('localServices')) || [];
+    allServices = [...allServices, ...localServices];
+
+    displayServices(allServices);
+    updateStats();
+
+  } catch (error) {
+    showError("Failed to load services. Please try again later.");
+    console.error("loadServices error:", error);
+  }
+}
+
     
     // Display services in cards
     function displayServices(services) {
