@@ -309,15 +309,15 @@
         <div class="modal-body">
           <form id="addServiceForm">
             <div class="mb-3">
-              <label for="serviceName" class="form-label">Service Name</label>
+              <label for="serviceName" class="form-label">Service Name*</label>
               <input type="text" class="form-control" id="serviceName" required>
             </div>
             <div class="mb-3">
-              <label for="serviceUrl" class="form-label">Service URL</label>
+              <label for="serviceUrl" class="form-label">Service URL*</label>
               <input type="url" class="form-control" id="serviceUrl" required>
             </div>
             <div class="mb-3">
-              <label for="serviceCategory" class="form-label">Category</label>
+              <label for="serviceCategory" class="form-label">Category*</label>
               <input type="text" class="form-control" id="serviceCategory" required>
             </div>
             <div class="mb-3">
@@ -328,7 +328,10 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-primary" id="saveServiceBtn">Save Service</button>
+          <button type="button" class="btn btn-primary" id="saveServiceBtn">
+            <span class="spinner-border spinner-border-sm d-none" id="saveSpinner" role="status" aria-hidden="true"></span>
+            Save Service
+          </button>
         </div>
       </div>
     </div>
@@ -367,6 +370,7 @@
       todayUsage: document.getElementById('todayUsage'),
       favoritesCount: document.getElementById('favoritesCount'),
       saveServiceBtn: document.getElementById('saveServiceBtn'),
+      saveSpinner: document.getElementById('saveSpinner'),
       addServiceForm: document.getElementById('addServiceForm')
     };
     
@@ -393,28 +397,21 @@
     }
     
     // Load services from Google Sheets
-   async function loadServices() {
-  try {
-    showLoading();
-
-    const response = await fetch(API_URL);
-    const result = await response.json();
-
-    // 🔍 Make sure you're getting just the array
-    allServices = result.data || [];  // ✅ Updated: extract only the 'data' array
-
-    const localServices = JSON.parse(localStorage.getItem('localServices')) || [];
-    allServices = [...allServices, ...localServices];
-
-    displayServices(allServices);
-    updateStats();
-
-  } catch (error) {
-    showError("Failed to load services. Please try again later.");
-    console.error("loadServices error:", error);
-  }
-}
-
+    async function loadServices() {
+      try {
+        showLoading();
+        
+        const response = await fetch(API_URL);
+        allServices = await response.json();
+        
+        displayServices(allServices);
+        updateStats();
+        
+      } catch (error) {
+        showError("Failed to load services. Please try again later.");
+        console.error(error);
+      }
+    }
     
     // Display services in cards
     function displayServices(services) {
@@ -649,58 +646,78 @@
       document.body.removeChild(a);
     }
     
-    // Add new service
-async function addService() {
-  const name = document.getElementById('serviceName').value.trim();
-  const url = document.getElementById('serviceUrl').value.trim();
-  const category = document.getElementById('serviceCategory').value.trim();
-  const shortcut = document.getElementById('serviceShortcut').value.trim().toLowerCase();
-
-  if (!name || !url || !category) {
-    alert('Please fill in all required fields');
-    return;
-  }
-
-  const newService = {
-    name,
-    url,
-    category,
-    shortcut: shortcut || name.charAt(0).toLowerCase()
-  };
-
-  try {
-    const response = await fetch(API_URL, {
-      method: "POST",
-      body: JSON.stringify(newService),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
-
-    const result = await response.json();
-
-    if (result.status === "success") {
-      alert("✅ Service saved successfully!");
+    // Add new service to backend
+    async function addService() {
+      const name = document.getElementById('serviceName').value.trim();
+      const url = document.getElementById('serviceUrl').value.trim();
+      const category = document.getElementById('serviceCategory').value.trim();
+      const shortcut = document.getElementById('serviceShortcut').value.trim().toLowerCase();
       
-      // Reload services
-      loadServices();
-
-      // Close modal
-      const modal = bootstrap.Modal.getInstance(document.getElementById('addServiceModal'));
-      modal.hide();
-
-      // Reset form
-      elements.addServiceForm.reset();
-    } else {
-      throw new Error(result.message || "Unknown error occurred.");
+      if (!name || !url || !category) {
+        alert('Please fill in all required fields');
+        return;
+      }
+      
+      // Validate URL
+      try {
+        new URL(url);
+      } catch (e) {
+        alert('Please enter a valid URL');
+        return;
+      }
+      
+      // Show loading state
+      elements.saveSpinner.classList.remove('d-none');
+      elements.saveServiceBtn.disabled = true;
+      
+      const newService = {
+        name,
+        url,
+        category,
+        shortcut: shortcut || name.charAt(0).toLowerCase()
+      };
+      
+      try {
+        // Send data to Google Apps Script backend
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action: 'addService',
+            data: newService
+          })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          // Reload services
+          await loadServices();
+          
+          // Close modal
+          const modal = bootstrap.Modal.getInstance(document.getElementById('addServiceModal'));
+          modal.hide();
+          
+          // Reset form
+          elements.addServiceForm.reset();
+          
+          // Show success message
+          alert('Service added successfully!');
+        } else {
+          throw new Error(result.message || 'Failed to add service');
+        }
+      } catch (error) {
+        console.error('Error adding service:', error);
+        alert('Failed to add service: ' + error.message);
+      } finally {
+        // Hide loading state
+        elements.saveSpinner.classList.add('d-none');
+        elements.saveServiceBtn.disabled = false;
+      }
     }
-
-  } catch (err) {
-    alert("❌ Failed to save service. Please try again.");
-    console.error("Error saving service:", err);
-  }
-}
-
+    
     // Get appropriate icon for service
     function getServiceIcon(serviceName) {
       const name = serviceName.toLowerCase();
