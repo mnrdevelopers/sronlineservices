@@ -404,20 +404,30 @@
     
     // Load services from Google Sheets
  async function loadServices() {
-  try {
-    const response = await fetch(API_URL);
-    const result = await response.json();
-    
-    if (result.success) {
-      allServices = result.data;
-      displayServices(allServices);
-    } else {
-      showError(result.error);
+      try {
+        // Use JSONP technique to bypass CORS
+        const callbackName = `jsonp_${Date.now()}`;
+        const script = document.createElement('script');
+        script.src = `${API_URL}?callback=${callbackName}`;
+        
+        window[callbackName] = (response) => {
+          delete window[callbackName];
+          document.body.removeChild(script);
+          
+          if (response.success) {
+            allServices = response.data;
+            displayServices(allServices);
+            updateStats();
+          } else {
+            showError(response.error);
+          }
+        };
+        
+        document.body.appendChild(script);
+      } catch (error) {
+        showError("Network error: " + error.message);
+      }
     }
-  } catch (error) {
-    showError("Network error: " + error.message);
-  }
-}
     
     // Display services in cards
     function displayServices(services) {
@@ -807,37 +817,41 @@ function toggleEditMode() {
 }
 
 // Add new service
-async function addNewService() {
-  const service = {
-    name: document.getElementById('serviceName').value,
-    category: document.getElementById('serviceCategory').value,
-    url: document.getElementById('serviceUrl').value,
-    shortcut: document.getElementById('serviceShortcut').value || ''
-  };
+ async function addNewService() {
+      const service = {
+        name: document.getElementById('serviceName').value,
+        category: document.getElementById('serviceCategory').value,
+        url: document.getElementById('serviceUrl').value,
+        shortcut: document.getElementById('serviceShortcut').value || ''
+      };
 
-  try {
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: "addService", data: service })
-    });
-    
-    const result = await response.json();
-    
-    if (result.success) {
-      // Close modal and refresh
-      bootstrap.Modal.getInstance(document.getElementById('addServiceModal')).hide();
-      document.getElementById('serviceForm').reset();
-      showToast('Service added successfully!', 'success');
-      loadServices();
-    } else {
-      throw new Error('Failed to add service');
+      try {
+        // Use JSONP technique to bypass CORS
+        const callbackName = `jsonp_${Date.now()}`;
+        const script = document.createElement('script');
+        script.src = `${API_URL}?callback=${callbackName}&action=addService&data=${encodeURIComponent(JSON.stringify(service))}`;
+        
+        window[callbackName] = (response) => {
+          delete window[callbackName];
+          document.body.removeChild(script);
+          
+          if (response.success) {
+            bootstrap.Modal.getInstance(document.getElementById('addServiceModal')).hide();
+            document.getElementById('serviceForm').reset();
+            showToast('Service added successfully!', 'success');
+            loadServices();
+          } else {
+            throw new Error(response.error || 'Failed to add service');
+          }
+        };
+        
+        document.body.appendChild(script);
+      } catch (error) {
+        showToast('Error adding service: ' + error.message, 'danger');
+        console.error(error);
+      }
     }
-  } catch (error) {
-    showToast('Error adding service: ' + error.message, 'danger');
-    console.error(error);
-  }
-}
+
 
 // Delete service
 async function deleteService(event) {
