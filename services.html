@@ -47,13 +47,13 @@
     }
     
     .service-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     }
     
     .service-icon {
-      font-size: 2rem;
-      margin-bottom: 1rem;
+      font-size: 1.2rem;
+      margin-right: 0.5rem;
       color: var(--primary);
     }
     
@@ -74,33 +74,47 @@
       background: rgba(67, 97, 238, 0.1);
       color: var(--primary);
       font-weight: 500;
-    }
-    
-    .shortcut-key {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      width: 24px;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--primary);
-      color: white;
-      border-radius: 4px;
       font-size: 0.75rem;
-      font-weight: bold;
     }
     
     .recent-service {
       border-left: 3px solid var(--primary);
     }
     
-    #keyboardShortcutHelp {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 1000;
+    /* Compact list view styles */
+    .list-view .service-item {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--bs-border-color);
+    }
+    
+    .list-view .service-item:hover {
+      background-color: rgba(67, 97, 238, 0.05);
+    }
+    
+    .list-view .service-icon {
+      font-size: 1rem;
+    }
+    
+    /* Compact card view styles */
+    .card-view .service-card {
+      height: 100%;
+    }
+    
+    .card-view .service-icon {
+      font-size: 1rem;
+    }
+    
+    .card-view .card-title {
+      font-size: 0.9rem;
+    }
+    
+    .card-view .card-body {
+      padding: 1rem;
+    }
+    
+    .card-view .btn {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.8rem;
     }
   </style>
 </head>
@@ -120,55 +134,54 @@
     </div>
   </nav>
 
-<!-- Hero Section -->
-<section class="py-5">
-  <div class="container text-center">
-    <div class="row justify-content-center">
-      <div class="col-lg-8">
-        <h1 class="display-5 fw-bold mb-3">Quick Access Dashboard</h1>
-        <p class="lead">All your service links in one place</p>  
-    </div>
+  <!-- Hero Section -->
+  <section class="py-5">
+    <div class="container text-center">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <h1 class="display-5 fw-bold mb-3">Quick Access Dashboard</h1>
+          <p class="lead">All your service links in one place</p>  
+        </div>
 
-          <!-- Quick Stats -->
-          <div class="row justify-content-center mt-4 g-3">
-            <div class="col-md-3">
-              <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                  <h5 class="card-title"><i class="fas fa-link text-primary me-2"></i> <span id="totalServices">0</span></h5>
-                  <p class="card-text text-muted small">Total Services</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                  <h5 class="card-title"><i class="fas fa-history text-primary me-2"></i> <span id="todayUsage">0</span></h5>
-                  <p class="card-text text-muted small">Today's Usage</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                  <h5 class="card-title"><i class="fas fa-star text-primary me-2"></i> <span id="favoritesCount">0</span></h5>
-                  <p class="card-text text-muted small">Favorites</p>
-                </div>
+        <!-- Quick Stats -->
+        <div class="row justify-content-center mt-4 g-3">
+          <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+              <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-link text-primary me-2"></i> <span id="totalServices">0</span></h5>
+                <p class="card-text text-muted small">Total Services</p>
               </div>
             </div>
           </div>
-          
-          <!-- Search Box -->
-          <div class="mt-4 mb-3">
-            <div class="input-group input-group-lg">
-              <span class="input-group-text bg-transparent border-end-0">
-                <i class="fas fa-search text-muted"></i>
-              </span>
-              <input 
-                type="text" 
-                class="form-control search-box border-start-0" 
-                id="searchInput" 
-                placeholder="Search or press shortcut key (A for Aadhaar, P for PAN)...">
+          <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+              <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-history text-primary me-2"></i> <span id="todayUsage">0</span></h5>
+                <p class="card-text text-muted small">Today's Usage</p>
+              </div>
             </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+              <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-star text-primary me-2"></i> <span id="favoritesCount">0</span></h5>
+                <p class="card-text text-muted small">Favorites</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Search Box -->
+        <div class="mt-4 mb-3">
+          <div class="input-group input-group-lg">
+            <span class="input-group-text bg-transparent border-end-0">
+              <i class="fas fa-search text-muted"></i>
+            </span>
+            <input 
+              type="text" 
+              class="form-control search-box border-start-0" 
+              id="searchInput" 
+              placeholder="Search services...">
           </div>
         </div>
       </div>
@@ -213,7 +226,15 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
           <h4 class="mb-0"><i class="fas fa-th-large me-2 text-primary"></i> All Services</h4>
           <div>
-            <button class="btn btn-sm btn-outline-primary me-2" id="exportBtn">
+            <div class="btn-group btn-group-sm" role="group">
+              <button type="button" class="btn btn-outline-primary active" id="cardViewBtn">
+                <i class="fas fa-th-large"></i> Cards
+              </button>
+              <button type="button" class="btn btn-outline-primary" id="listViewBtn">
+                <i class="fas fa-list"></i> List
+              </button>
+            </div>
+            <button class="btn btn-sm btn-outline-primary ms-2" id="exportBtn">
               <i class="fas fa-file-export me-1"></i> Export
             </button>
             <button class="btn btn-sm btn-outline-primary" id="refreshBtn">
@@ -222,60 +243,12 @@
           </div>
         </div>
         
-        <div class="row" id="servicesList">
+        <div class="row card-view" id="servicesList">
           <!-- Services will load here -->
           <div class="col-12 text-center py-5">
             <div class="spinner-border text-primary" role="status">
               <span class="visually-hidden">Loading...</span>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Keyboard Shortcut Help -->
-  <button class="btn btn-primary btn-sm shadow" id="keyboardShortcutHelp" 
-          data-bs-toggle="modal" data-bs-target="#shortcutModal">
-    <i class="fas fa-keyboard me-1"></i> Shortcuts
-  </button>
-
-  <!-- Shortcut Help Modal -->
-  <div class="modal fade" id="shortcutModal" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title"><i class="fas fa-keyboard me-2"></i> Keyboard Shortcuts</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <div class="table-responsive">
-            <table class="table">
-              <tr>
-                <th>Shortcut</th>
-                <th>Action</th>
-              </tr>
-              <tr>
-                <td><kbd>A</kbd></td>
-                <td>Jump to Aadhaar services</td>
-              </tr>
-              <tr>
-                <td><kbd>P</kbd></td>
-                <td>Jump to PAN services</td>
-              </tr>
-              <tr>
-                <td><kbd>/</kbd></td>
-                <td>Focus search box</td>
-              </tr>
-              <tr>
-                <td><kbd>D</kbd></td>
-                <td>Toggle dark mode</td>
-              </tr>
-              <tr>
-                <td><kbd>R</kbd></td>
-                <td>Refresh services</td>
-              </tr>
-            </table>
           </div>
         </div>
       </div>
@@ -300,6 +273,7 @@
       todayUses: 0,
       lastUsed: null
     };
+    let currentView = 'card'; // 'card' or 'list'
     
     // DOM Elements
     const elements = {
@@ -312,7 +286,9 @@
       themeToggle: document.getElementById('themeToggle'),
       totalServices: document.getElementById('totalServices'),
       todayUsage: document.getElementById('todayUsage'),
-      favoritesCount: document.getElementById('favoritesCount')
+      favoritesCount: document.getElementById('favoritesCount'),
+      cardViewBtn: document.getElementById('cardViewBtn'),
+      listViewBtn: document.getElementById('listViewBtn')
     };
     
     // Icons mapping
@@ -335,6 +311,10 @@
       renderRecentServices();
       renderFavorites();
       checkDayChange();
+      
+      // Set initial view from localStorage
+      const savedView = localStorage.getItem('viewPreference') || 'card';
+      setView(savedView);
     }
     
     // Load services from Google Sheets
@@ -354,7 +334,7 @@
       }
     }
     
-    // Display services in cards
+    // Display services based on current view
     function displayServices(services) {
       if (!services || services.length === 0) {
         elements.servicesList.innerHTML = `
@@ -368,6 +348,15 @@
         return;
       }
       
+      if (currentView === 'card') {
+        displayCardView(services);
+      } else {
+        displayListView(services);
+      }
+    }
+    
+    // Display services in card view
+    function displayCardView(services) {
       // Group by category
       const categories = {};
       services.forEach(service => {
@@ -380,12 +369,11 @@
       // Loop through categories
       for (const [category, items] of Object.entries(categories)) {
         html += `
-          <div class="col-12 mt-4 mb-2">
-            <h5 class="fw-bold">
+          <div class="col-12 mt-3 mb-1">
+            <h6 class="fw-bold">
               <i class="fas fa-folder-open text-primary me-2"></i>
               ${category}
-            </h5>
-            <hr>
+            </h6>
           </div>
         `;
         
@@ -393,17 +381,15 @@
         items.forEach(service => {
           const icon = getServiceIcon(service.name);
           const isFavorite = favorites.some(fav => fav.url === service.url);
-          const shortcut = service.shortcut ? service.shortcut.toUpperCase() : service.name.charAt(0).toUpperCase();
           
           html += `
-            <div class="col-md-6 col-lg-4 col-xl-3 mb-4">
-              <div class="service-card card h-100 position-relative">
-                <div class="shortcut-key" title="Press ${shortcut}">${shortcut}</div>
+            <div class="col-md-6 col-lg-4 col-xl-3 mb-3">
+              <div class="service-card card h-100">
                 <div class="card-body text-center">
                   <i class="fas fa-${icon} service-icon"></i>
-                  <h5 class="card-title">${service.name}</h5>
-                  <span class="badge category-badge mb-3">${service.category}</span>
-                  <div class="d-flex justify-content-center gap-2">
+                  <h6 class="card-title mb-1">${service.name}</h6>
+                  <span class="badge category-badge mb-2">${service.category}</span>
+                  <div class="d-flex justify-content-center gap-1">
                     <a 
                       href="${service.url}" 
                       target="_blank" 
@@ -429,6 +415,85 @@
       }
       
       elements.servicesList.innerHTML = html;
+      elements.servicesList.className = 'row card-view';
+    }
+    
+    // Display services in list view
+    function displayListView(services) {
+      // Group by category
+      const categories = {};
+      services.forEach(service => {
+        if (!categories[service.category]) categories[service.category] = [];
+        categories[service.category].push(service);
+      });
+      
+      let html = '';
+      
+      // Loop through categories
+      for (const [category, items] of Object.entries(categories)) {
+        html += `
+          <div class="col-12">
+            <div class="d-flex align-items-center mb-2 mt-3">
+              <i class="fas fa-folder-open text-primary me-2"></i>
+              <h6 class="fw-bold mb-0">${category}</h6>
+            </div>
+            <div class="list-group list-group-flush mb-3">
+        `;
+        
+        // Add services for this category
+        items.forEach(service => {
+          const icon = getServiceIcon(service.name);
+          const isFavorite = favorites.some(fav => fav.url === service.url);
+          
+          html += `
+            <div class="list-group-item service-item d-flex justify-content-between align-items-center">
+              <div>
+                <i class="fas fa-${icon} service-icon"></i>
+                <a href="${service.url}" target="_blank" class="text-decoration-none">${service.name}</a>
+              </div>
+              <div class="d-flex gap-1">
+                <button 
+                  class="btn btn-sm ${isFavorite ? 'btn-warning' : 'btn-outline-secondary'}"
+                  onclick="toggleFavorite(event, '${service.url}')"
+                  title="${isFavorite ? 'Remove from favorites' : 'Add to favorites'}"
+                >
+                  <i class="fas fa-star"></i>
+                </button>
+                <a 
+                  href="${service.url}" 
+                  target="_blank" 
+                  class="btn btn-primary btn-sm"
+                  data-service='${JSON.stringify(service)}'
+                  onclick="trackUsage(event)"
+                >
+                  <i class="fas fa-external-link-alt"></i>
+                </a>
+              </div>
+            </div>
+          `;
+        });
+        
+        html += `</div></div>`;
+      }
+      
+      elements.servicesList.innerHTML = html;
+      elements.servicesList.className = 'row list-view';
+    }
+    
+    // Set current view mode
+    function setView(view) {
+      currentView = view;
+      localStorage.setItem('viewPreference', view);
+      
+      if (view === 'card') {
+        elements.cardViewBtn.classList.add('active');
+        elements.listViewBtn.classList.remove('active');
+      } else {
+        elements.cardViewBtn.classList.remove('active');
+        elements.listViewBtn.classList.add('active');
+      }
+      
+      displayServices(allServices);
     }
     
     // Track service usage
@@ -480,7 +545,7 @@
       localStorage.setItem('favorites', JSON.stringify(favorites));
       renderFavorites();
       updateStats();
-      loadServices(); // Refresh to update favorite icons
+      displayServices(allServices); // Refresh to update favorite icons
     }
     
     // Render recent services
@@ -619,49 +684,6 @@
       `;
     }
     
-    // Setup keyboard shortcuts
-    function setupKeyboardShortcuts() {
-      document.addEventListener('keydown', (e) => {
-        // Ignore if typing in input
-        if (e.target.tagName === 'INPUT') return;
-        
-        switch (e.key.toLowerCase()) {
-          case '/':
-            e.preventDefault();
-            elements.searchInput.focus();
-            break;
-            
-          case 'd':
-            toggleTheme();
-            break;
-            
-          case 'r':
-            loadServices();
-            break;
-            
-          default:
-            // Jump to service by first letter
-            if (e.key.length === 1 && /[a-z]/i.test(e.key)) {
-              const firstMatch = allServices.find(service => 
-                service.shortcut?.toLowerCase() === e.key.toLowerCase() || 
-                service.name.toLowerCase().startsWith(e.key.toLowerCase())
-              );
-              
-              if (firstMatch) {
-                const element = document.querySelector(`[data-service*="${firstMatch.url}"]`);
-                if (element) {
-                  element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                  element.classList.add('animate__animated', 'animate__pulse');
-                  setTimeout(() => {
-                    element.classList.remove('animate__animated', 'animate__pulse');
-                  }, 1000);
-                }
-              }
-            }
-        }
-      });
-    }
-    
     // Toggle dark/light theme
     function toggleTheme() {
       const currentTheme = document.documentElement.getAttribute('data-bs-theme');
@@ -692,8 +714,9 @@
       // Theme toggle
       elements.themeToggle.addEventListener('click', toggleTheme);
       
-      // Keyboard shortcuts
-      setupKeyboardShortcuts();
+      // View toggle buttons
+      elements.cardViewBtn.addEventListener('click', () => setView('card'));
+      elements.listViewBtn.addEventListener('click', () => setView('list'));
     }
     
     // Initialize theme from localStorage
