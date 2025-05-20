@@ -36,6 +36,13 @@
     
     .navbar-brand {
       font-weight: 700;
+      display: flex;
+      align-items: center;
+    }
+    
+    .navbar-brand img {
+      height: 30px;
+      margin-right: 10px;
     }
     
     .service-card {
@@ -59,10 +66,11 @@
     
     .search-box {
       border-radius: 50px;
-      padding: 12px 20px;
+      padding: 8px 15px;
       border: 2px solid var(--bs-border-color);
       background-color: var(--bs-body-bg);
       color: var(--bs-body-color);
+      width: 250px;
     }
     
     .search-box:focus {
@@ -116,6 +124,39 @@
       padding: 0.25rem 0.5rem;
       font-size: 0.8rem;
     }
+    
+    /* Sidebar styles */
+    .sidebar {
+      position: sticky;
+      top: 1rem;
+      height: calc(100vh - 2rem);
+      overflow-y: auto;
+    }
+    
+    /* Stats cards */
+    .stat-card {
+      border-radius: 8px;
+      padding: 0.75rem;
+      margin-bottom: 0.75rem;
+      background-color: var(--bs-card-bg);
+      border: 1px solid var(--bs-border-color);
+    }
+    
+    .stat-card .stat-value {
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: var(--primary);
+    }
+    
+    .stat-card .stat-label {
+      font-size: 0.75rem;
+      color: var(--bs-secondary-color);
+    }
+    
+    /* Navbar search */
+    .navbar-search {
+      margin-left: 20px;
+    }
   </style>
 </head>
 <body>
@@ -123,8 +164,25 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container">
       <a class="navbar-brand" href="#">
-        <i class="fas fa-rocket me-2"></i>SR Online Services
+        <!-- Add your logo image here -->
+        <img src="logo.png" alt="SR Online Services Logo">
+        SR Online Services
       </a>
+      
+      <!-- Search Box in Navbar -->
+      <div class="navbar-search d-flex">
+        <div class="input-group">
+          <span class="input-group-text bg-transparent border-end-0">
+            <i class="fas fa-search text-muted"></i>
+          </span>
+          <input 
+            type="text" 
+            class="form-control search-box border-start-0" 
+            id="searchInput" 
+            placeholder="Search services...">
+        </div>
+      </div>
+      
       <div class="ms-auto d-flex align-items-center gap-3">
         <button class="btn btn-sm btn-light" id="themeToggle">
           <i class="fas fa-moon"></i>
@@ -134,95 +192,65 @@
     </div>
   </nav>
 
-  <!-- Hero Section -->
-  <section class="py-5">
-    <div class="container text-center">
-      <div class="row justify-content-center">
-        <div class="col-lg-8">
-          <h1 class="display-5 fw-bold mb-3">Quick Access Dashboard</h1>
-          <p class="lead">All your service links in one place</p>  
-        </div>
-
-        <!-- Quick Stats -->
-        <div class="row justify-content-center mt-4 g-3">
-          <div class="col-md-3">
-            <div class="card border-0 shadow-sm">
-              <div class="card-body">
-                <h5 class="card-title"><i class="fas fa-link text-primary me-2"></i> <span id="totalServices">0</span></h5>
-                <p class="card-text text-muted small">Total Services</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="card border-0 shadow-sm">
-              <div class="card-body">
-                <h5 class="card-title"><i class="fas fa-history text-primary me-2"></i> <span id="todayUsage">0</span></h5>
-                <p class="card-text text-muted small">Today's Usage</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="card border-0 shadow-sm">
-              <div class="card-body">
-                <h5 class="card-title"><i class="fas fa-star text-primary me-2"></i> <span id="favoritesCount">0</span></h5>
-                <p class="card-text text-muted small">Favorites</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Search Box -->
-        <div class="mt-4 mb-3">
-          <div class="input-group input-group-lg">
-            <span class="input-group-text bg-transparent border-end-0">
-              <i class="fas fa-search text-muted"></i>
-            </span>
-            <input 
-              type="text" 
-              class="form-control search-box border-start-0" 
-              id="searchInput" 
-              placeholder="Search services...">
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- Main Content -->
-  <div class="container">
+  <div class="container-fluid mt-3">
     <div class="row">
-      <!-- Recent Services -->
-      <div class="col-md-4 col-lg-3">
-        <div class="card mb-4">
-          <div class="card-header bg-primary text-white">
-            <i class="fas fa-clock me-2"></i> Recently Used
+      <!-- Left Sidebar -->
+      <div class="col-md-3 col-lg-2">
+        <div class="sidebar">
+          <!-- Quick Stats -->
+          <div class="card mb-3">
+            <div class="card-header bg-primary text-white">
+              <i class="fas fa-chart-bar me-2"></i> Quick Stats
+            </div>
+            <div class="card-body">
+              <div class="stat-card">
+                <div class="stat-value"><i class="fas fa-link text-primary me-2"></i> <span id="totalServices">0</span></div>
+                <div class="stat-label">Total Services</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value"><i class="fas fa-history text-primary me-2"></i> <span id="todayUsage">0</span></div>
+                <div class="stat-label">Today's Usage</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value"><i class="fas fa-star text-primary me-2"></i> <span id="favoritesCount">0</span></div>
+                <div class="stat-label">Favorites</div>
+              </div>
+            </div>
           </div>
-          <div class="card-body p-0">
-            <ul class="list-group list-group-flush" id="recentServices">
-              <li class="list-group-item text-center py-4 text-muted">
-                No recent services
-              </li>
-            </ul>
+          
+          <!-- Recent Services -->
+          <div class="card mb-3">
+            <div class="card-header bg-primary text-white">
+              <i class="fas fa-clock me-2"></i> Recently Used
+            </div>
+            <div class="card-body p-0">
+              <ul class="list-group list-group-flush" id="recentServices">
+                <li class="list-group-item text-center py-4 text-muted">
+                  No recent services
+                </li>
+              </ul>
+            </div>
           </div>
-        </div>
-        
-        <!-- Favorites -->
-        <div class="card mb-4">
-          <div class="card-header bg-primary text-white">
-            <i class="fas fa-star me-2"></i> Favorites
-          </div>
-          <div class="card-body p-0">
-            <ul class="list-group list-group-flush" id="favoritesList">
-              <li class="list-group-item text-center py-4 text-muted">
-                No favorites yet
-              </li>
-            </ul>
+          
+          <!-- Favorites -->
+          <div class="card">
+            <div class="card-header bg-primary text-white">
+              <i class="fas fa-star me-2"></i> Favorites
+            </div>
+            <div class="card-body p-0">
+              <ul class="list-group list-group-flush" id="favoritesList">
+                <li class="list-group-item text-center py-4 text-muted">
+                  No favorites yet
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
       
       <!-- All Services -->
-      <div class="col-md-8 col-lg-9">
+      <div class="col-md-9 col-lg-10">
         <div class="d-flex justify-content-between align-items-center mb-3">
           <h4 class="mb-0"><i class="fas fa-th-large me-2 text-primary"></i> All Services</h4>
           <div>
